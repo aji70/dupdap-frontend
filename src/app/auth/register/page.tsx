@@ -82,7 +82,7 @@ export default function RegisterPage() {
   };
 
   // Each field key doubles as the input id so htmlFor/id are always in sync (#156).
-  const field = (key: keyof typeof form, label: string, type = 'text', required = true) => (
+  const field = (key: keyof typeof form, label: string, type = 'text', required = true, autoComplete?: string) => (
     <div>
       <label htmlFor={key} className="label">{label}</label>
       <input
