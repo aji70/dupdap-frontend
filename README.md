@@ -172,3 +172,8 @@ vercel --prod
 ```
 
 The app is a standard Next.js app, so any platform that supports Next.js (Vercel, Railway, etc.) works. The only required runtime config is `NEXT_PUBLIC_API_URL` pointed at the deployed backend.
+
+## Handsoff notes
+
+<!-- handsoff-issue-381 -->
+- #381: No test coverage exists for the forgot-password or reset-password pages
