@@ -24,6 +24,10 @@ function getRateLimitMessage(err: unknown): string {
   return getErrorMessage(err);
 }
 
+function isRateLimited(err: unknown): boolean {
+  return err instanceof AxiosError && err.response?.status === 429;
+}
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,6 +37,8 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [rateLimitMessage, setRateLimitMessage] = useState<string | null>(null);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const showCaptcha = failedAttempts >= CAPTCHA_THRESHOLD;
 
@@ -54,7 +60,12 @@ function LoginForm() {
       router.push(redirect);
     } catch (err) {
       setFailedAttempts((prev) => prev + 1);
-      toast.error(getRateLimitMessage(err));
+      const message = getRateLimitMessage(err);
+      if (isRateLimited(err)) {
+        setRateLimited(true);
+        setRateLimitMessage(message);
+      }
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -69,6 +80,15 @@ function LoginForm() {
             Welcome back to StellarPay
           </p>
         </div>
+
+        {rateLimited && rateLimitMessage && (
+          <div
+            role="alert"
+            className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          >
+            {rateLimitMessage}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormField
@@ -90,9 +110,17 @@ function LoginForm() {
           />
 
           {showCaptcha && (
-            <p className="text-sm text-amber-600">
-              Multiple failed attempts detected. Please verify you are human.
-            </p>
+            <div
+              role="alert"
+              className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700"
+            >
+              <p className="font-medium">
+                Multiple failed attempts detected.
+              </p>
+              <p className="mt-1">
+                Please verify you are human before trying again.
+              </p>
+            </div>
           )}
 
           <button
