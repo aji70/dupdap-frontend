@@ -10,6 +10,14 @@ export function getErrorMessage(err: unknown): string | undefined {
   return undefined;
 }
 
+/**
+ * Type guard narrowing an unknown thrown value to an AxiosError so callers can
+ * safely access Axios-specific properties like `response` and `response.status`.
+ */
+export function isAxiosError(err: unknown): err is AxiosError {
+  return err instanceof AxiosError;
+}
+
 /** Number of failed login attempts before a CAPTCHA challenge is shown. */
 export const CAPTCHA_THRESHOLD = 3;
 

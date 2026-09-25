@@ -177,3 +177,5 @@ The app is a standard Next.js app, so any platform that supports Next.js (Vercel
 
 <!-- handsoff-issue-293 -->
 - #293: Login and register forms have no autocomplete attributes for email/password
+<!-- handsoff-issue-332 -->
+- #332: StatusPieChart and VolumeBarChart components are fully implemented but never rendered anywhere
